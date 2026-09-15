@@ -40,6 +40,10 @@ export async function downloadsAvailable() {
 export async function saveFile({ filename, data, mime = 'application/octet-stream' }) {
   const downloads = await getCapability();
 
+  // When the host owns saving, it owns the outcome too. Falling back to an
+  // anchor here would be worse than useless: the same sandbox that provides
+  // this capability blocks anchor downloads silently, so the fallback would
+  // "succeed" without writing anything.
   if (downloads?.save) {
     try {
       const payload = data instanceof Blob ? data : new Blob([data], { type: mime });
@@ -47,7 +51,10 @@ export async function saveFile({ filename, data, mime = 'application/octet-strea
       return { status: 'saved' };
     } catch (error) {
       if (error?.code === 'declined') return { status: 'declined' };
-      // Anything else: fall through and try the ordinary browser route.
+      if (error?.code === 'rate_limited') {
+        return { status: 'failed', reason: 'A save prompt is already open — finish that one first.' };
+      }
+      return { status: 'failed', reason: error?.message ?? 'The host could not save that file.' };
     }
   }
 
