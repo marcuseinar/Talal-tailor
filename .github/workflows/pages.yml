@@ -2,7 +2,12 @@ name: Deploy to GitHub Pages
 
 on:
   push:
-    branches: [main, master]
+    # The default branch today is the POC branch; main/master are listed so a
+    # later rename does not silently stop deploying.
+    branches:
+      - main
+      - master
+      - claude/svelte-recruiting-poc-3qt3jf
   workflow_dispatch:
 
 permissions:
@@ -26,11 +31,18 @@ jobs:
           node-version: 22
           cache: npm
 
+      # `enablement` turns Pages on for the repository and points it at
+      # Actions, so no manual step in repository settings is needed.
+      - uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
       - run: npm ci
 
       - run: npm run build
 
       # Pages serves from a sub-path; the build already uses relative URLs.
+      # .nojekyll keeps the static pipeline from reinterpreting the output.
       - run: touch dist/.nojekyll
 
       - uses: actions/upload-pages-artifact@v3

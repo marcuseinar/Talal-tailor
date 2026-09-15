@@ -31,6 +31,9 @@ npm run dev          # http://localhost:5173
 | `npm run gen:avatars` | Re-fetch the CC0 candidate avatars |
 | `npm run gen:metrics` | Re-extract the PDF font metrics |
 
+The mascot images in `src/assets/` are committed renditions of a source photo that is not in the
+repository; regenerate them with `sharp` if the source changes.
+
 The build is fully static with relative asset paths, so it runs from a domain root, a GitHub Pages
 sub-path, or a sandboxed embed without configuration.
 
@@ -113,7 +116,8 @@ chart library and no PDF library.
 ## Deploying
 
 **GitHub Pages.** `.github/workflows/pages.yml` builds and deploys on every push to the default
-branch. Enable it once under *Settings → Pages → Source → GitHub Actions*.
+branch, and enables Pages itself on the first run — no manual step in repository settings.
+Live at **https://marcuseinar.github.io/Talal-tailor/**.
 
 **Anything else.** `npm run build` and serve `dist/` as static files.
 
