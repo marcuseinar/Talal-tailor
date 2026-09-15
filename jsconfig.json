@@ -1,0 +1,11 @@
+{
+  "compilerOptions": {
+    "moduleResolution": "bundler",
+    "target": "ES2022",
+    "module": "ES2022",
+    "checkJs": true,
+    "allowJs": true,
+    "strict": false
+  },
+  "include": ["src/**/*.js", "src/**/*.svelte", "scripts/**/*.mjs"]
+}
